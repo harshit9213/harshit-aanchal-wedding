@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import haldi from './assets/haldi.png';
+import mehendi from './assets/mehndi.png';
+import wedding from './assets/wedding-pheras.png'; 
 import {
   LazyMotion,
   domAnimation,
@@ -34,11 +37,12 @@ const celebrations = [
     dress: 'Yellow tones',
     symbol: '✿',
     style: 'haldi',
+     image: haldi,
     hindi: {
       name: 'हल्दी',
       date: 'बुधवार, 25 नवंबर',
       time: 'प्रातःकाल',
-      venue: 'अंकुर अपार्टमेंट, राजेन्द्र नगर, साहिबाबाद',
+      venue: 'आरजेड-153ए गली नंबर 5, कैलाश पुरी एक्सटेंशन (पंकज बुक डिपो))',
       dress: 'पीले रंग के वस्त्र'
     }
   },
@@ -47,14 +51,17 @@ const celebrations = [
     date: 'Wednesday, 25 November',
     time: 'Evening',
     venue: 'RZ-153A Gali No 5, Kailash puri ext (Pankaj Book Depot)',
+
+   
     dress: 'Greens & florals',
     symbol: '❋',
     style: 'mehendi',
+    image: mehendi,
     hindi: {
       name: 'मेहंदी',
       date: 'बुधवार, 25 नवंबर',
       time: 'सायंकाल',
-      venue: 'अंकुर अपार्टमेंट, राजेन्द्र नगर, साहिबाबाद',
+      venue: 'आरजेड-153ए गली नंबर 5, कैलाश पुरी एक्सटेंशन (पंकज बुक डिपो)',
       dress: 'हरे एवं पुष्पों वाले वस्त्र'
     }
   },
@@ -66,6 +73,7 @@ const celebrations = [
     dress: 'Ethnic glam',
     symbol: 'ॐ',
     style: 'wedding',
+    image: wedding,
     hindi: {
       name: 'विवाह के फेरे',
       date: 'गुरुवार, 26 नवंबर',
@@ -96,7 +104,7 @@ const groomFamily = [
     relation: 'Grandson of',
     names: 'Shri Ishwar Chand Tayal & Smt Urmila Devi',
     hindiRelation: 'पौत्र',
-    hindiNames: 'स्वर्गीय श्री ईश्वर चंद तायल एवं स्वर्गीय श्रीमती उर्मिला देवी'
+    hindiNames: 'श्री ईश्वर चंद तायल एवं श्रीमती उर्मिला देवी'
   },
   {
     relation: 'Son of',
@@ -106,31 +114,25 @@ const groomFamily = [
   }
 ];
 
-const invitedBy = ['Sh. Anup Gupta', 'Sh. Manoj Gupta', 'Krishna Gupta', 'Amar Gupta'];
-const invitedByHindi = ['श्री अनूप गुप्ता', 'श्री मनोज गुप्ता', 'कृष्णा गुप्ता', 'अमर गुप्ता'];
+const invitedBy = ['Sh. Chatarsen Tayal', 'Sh. Hitesh Tayal', 'Yogesh','Nakul','Puneet','Gaurav'];
+const invitedByHindi = ['श्री चतरसेन तायल', 'श्री हितेश तायल', 'योगेश','नकुल','पुनीत','गौरव'];
 const littleStars = [
-  'Rudransh',
-  'Yuvaan',
-  'Shrey',
-  'Aarav',
-  'Krishiv',
-  'Advit',
-  'Bhavya',
-  'Ridhaan',
-  'Shivay',
-  'Adhiraj'
+  'Khyati',
+  'Gracy',
+  'Chhavi',
+  'Harshika',
+  'Naksh',
+  'Yadwik',
+  
 ];
 const littleStarsHindi = [
-  'रुद्रांश',
-  'युवान',
-  'श्रेय',
-  'आरव',
-  'कृशिव',
-  'अद्वित',
-  'भव्य',
-  'रिधान',
-  'शिवाय',
-  'अधिराज'
+  'ख्याति',
+  'ग्रेसी',
+  'छवि',
+  'हर्षिका',
+  'नक्ष',
+  'याद्विक',
+  
 ];
 
 const translations = {
@@ -319,15 +321,22 @@ function useCountdown() {
   };
 }
 
-function useRevealSections() {
+
+function useRevealSections(isOpened) {
   useEffect(() => {
+    // Invitation open hone se pehle reveal observer start mat karo.
+    if (!isOpened) return undefined;
+
     const sections = document.querySelectorAll('.reveal');
+
     const reduceMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
     if (reduceMotion || !('IntersectionObserver' in window)) {
-      sections.forEach((section) => section.classList.add('is-visible'));
+      sections.forEach((section) => {
+        section.classList.add('is-visible');
+      });
       return undefined;
     }
 
@@ -344,9 +353,11 @@ function useRevealSections() {
     );
 
     sections.forEach((section) => observer.observe(section));
+
     return () => observer.disconnect();
-  }, []);
+  }, [isOpened]);
 }
+
 
 function useFocusInvitation(isOpened, heroRef, sealButtonRef) {
   useEffect(() => {
@@ -473,17 +484,22 @@ function EventCard({ event, index, language, copy }) {
 
   return (
     <article
-      className={`event-card reveal event-card--${event.style}`}
-      style={{ '--reveal-order': index }}
+      className={`event-card event-card--${event.style}`}
+      style={{ 
+        '--reveal-order': index,
+        backgroundImage: event.image ? `url(${event.image})` : 'none' 
+      }}
     >
-      <div className="event-card__art" aria-hidden="true">
-        <span>{event.symbol}</span>
-      </div>
+      {/* Text ko highlight karne ke liye glass effect overlay */}
+      <div className="event-card__overlay"></div>
+      
       <div className="event-card__content">
         <p className="eyebrow">{details.date}</p>
         <h3>{details.name}</h3>
         <p className="event-card__time">{details.time}</p>
-        <p className="event-card__venue">{event.venue}</p>
+        <p className="event-card__venue">
+  <strong>{event.venue}</strong>
+</p>
         <p className="event-card__dress">
           <span aria-hidden="true">✦</span> {details.dress}
         </p>
@@ -734,7 +750,7 @@ export default function App() {
   const floralAccentControls = useAnimationControls();
   const copy = translations[language];
 
-  useRevealSections();
+  useRevealSections(isOpened);
   useFocusInvitation(isOpened, heroRef, sealButtonRef);
 
   useEffect(() => {
@@ -807,7 +823,9 @@ export default function App() {
 
     audio.muted = false;
     try {
-      await audio.play();
+      await setTimeout(() => {
+  audio.play();
+}, 1800);
       setMusicOn(true);
       setMusicMuted(false);
       setMusicMessage(copy.musicPlaying);
@@ -1202,26 +1220,26 @@ export default function App() {
           )}
         </section>
 
-        <section className="section celebrations-section" id="events">
-          <div className="section-heading reveal">
-            <p className="eyebrow">{copy.moments}</p>
-            <h2>{copy.celebrations}</h2>
-            <p className="section-heading__detail">
-              {copy.lookForward}
-            </p>
-          </div>
-          <div className="event-list">
-            {celebrations.map((event, index) => (
-              <EventCard
-                event={event}
-                index={index}
-                key={event.name}
-                language={language}
-                copy={copy}
-              />
-            ))}
-          </div>
-        </section>
+          <section className="section celebrations-section" id="events">
+            <div className="section-heading reveal">
+              <p className="eyebrow">{copy.moments}</p>
+              <h2>{copy.celebrations}</h2>
+              <p className="section-heading__detail">
+                {copy.lookForward}
+              </p>
+            </div>
+            <div className="event-list">
+              {celebrations.map((event, index) => (
+                <EventCard
+                  event={event}
+                  index={index}
+                  key={event.name}
+                  language={language}
+                  copy={copy}
+                />
+              ))}
+            </div>
+          </section>
 
         <section className="section venue-section" id="venue">
           <div className="venue-card reveal">
@@ -1305,26 +1323,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section details-section" id="details">
-          <div className="section-heading reveal">
-            <p className="eyebrow">{copy.helpfulDetails}</p>
-            <h2>{copy.goodToKnow}</h2>
-          </div>
-          <div className="faq-list reveal">
-            <details>
-              <summary>{copy.datesQuestion}</summary>
-              <p>{copy.datesAnswer}</p>
-            </details>
-            <details>
-              <summary>{copy.dressQuestion}</summary>
-              <p>{copy.dressAnswer}</p>
-            </details>
-            <details>
-              <summary>{copy.travelQuestion}</summary>
-              <p>{copy.travelAnswer}</p>
-            </details>
-          </div>
-        </section>
+        
 
         <section className="section family-thanks-section">
           <div className="family-thanks reveal">
@@ -1346,6 +1345,26 @@ export default function App() {
                 <li key={name}>{name}</li>
               ))}
             </ul>
+          </div>
+        </section>
+        <section className="section details-section" id="details">
+          <div className="section-heading reveal">
+            <p className="eyebrow">{copy.helpfulDetails}</p>
+            <h2>{copy.goodToKnow}</h2>
+          </div>
+          <div className="faq-list reveal">
+            <details>
+              <summary>{copy.datesQuestion}</summary>
+              <p>{copy.datesAnswer}</p>
+            </details>
+            <details>
+              <summary>{copy.dressQuestion}</summary>
+              <p>{copy.dressAnswer}</p>
+            </details>
+            <details>
+              <summary>{copy.travelQuestion}</summary>
+              <p>{copy.travelAnswer}</p>
+            </details>
           </div>
         </section>
       </main>
