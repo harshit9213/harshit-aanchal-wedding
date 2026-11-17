@@ -534,6 +534,7 @@ function FamilyLineage({ title, relationships, language }) {
 
 function ScratchDateCard({ copy, language, onReveal }) {
   const [isRevealed, setIsRevealed] = useState(false);
+  const [sparkles, setSparkles] = useState([]);
   const canvasRef = useRef(null);
   const lastPointRef = useRef(null);
   const scratchMovesRef = useRef(0);
@@ -553,7 +554,11 @@ function ScratchDateCard({ copy, language, onReveal }) {
       const context = canvas.getContext('2d', { willReadFrequently: true });
       if (!context) return;
 
+      // Pehle clear karo, phir scale lagao
+      context.clearRect(0, 0, canvas.width, canvas.height);
       context.scale(scale, scale);
+
+      // Golden Scratch Layer
       const gradient = context.createLinearGradient(0, 0, bounds.width, bounds.height);
       gradient.addColorStop(0, '#f3e5bd');
       gradient.addColorStop(0.2, '#c9a660');
@@ -609,19 +614,27 @@ function ScratchDateCard({ copy, language, onReveal }) {
       context.fillText('✧', bounds.width / 2, bounds.height / 2 + 30);
     };
 
-    drawSurface();
-    const observer = new ResizeObserver(drawSurface);
+    const timeoutId = setTimeout(drawSurface, 100);
+    const observer = new ResizeObserver(() => {
+      setTimeout(drawSurface, 50);
+    });
     observer.observe(canvas);
-    return () => observer.disconnect();
+
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
   }, [copy.scratchHint, isRevealed, language]);
 
   const revealDate = () => {
     if (isRevealed) return;
     setIsRevealed(true);
+    setSparkles([]);
     onReveal();
   };
 
   const checkScratchProgress = (canvas, context) => {
+    // Note: getImageData actual pixel dimensions use karta hai, isliye canvas.width use kiya
     const { width, height } = canvas;
     const pixels = context.getImageData(0, 0, width, height).data;
     let cleared = 0;
@@ -633,7 +646,29 @@ function ScratchDateCard({ copy, language, onReveal }) {
       if (pixels[alphaIndex] < 16) cleared += 1;
     }
 
-    if (samples > 0 && cleared / samples >= 0.38) revealDate();
+    if (samples > 0 && cleared / samples >= 0.50) revealDate();
+  };
+
+  const addSparkle = (x, y) => {
+    const id = Date.now() + Math.random();
+    const size = 3 + Math.random() * 5; // Random size for realistic glitter
+    // Halka sa random offset taaki ek line na bane, spray jaisa lage
+    const offsetX = (Math.random() - 0.5) * 16;
+    const offsetY = (Math.random() - 0.5) * 16;
+    
+    setSparkles((prev) => [...prev, { id, x: x + offsetX, y: y + offsetY, size }]);
+    setTimeout(() => {
+      setSparkles((prev) => prev.filter((s) => s.id !== id));
+    }, 600);
+  };
+
+  const getCoordinates = (event, canvas) => {
+    const bounds = canvas.getBoundingClientRect();
+    // Directly CSS pixels return karo, koi scale multiply mat karo
+    return {
+      x: event.clientX - bounds.left,
+      y: event.clientY - bounds.top
+    };
   };
 
   const scratch = (event) => {
@@ -643,23 +678,22 @@ function ScratchDateCard({ copy, language, onReveal }) {
     const context = canvas?.getContext('2d');
     if (!canvas || !context) return;
 
-    const bounds = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / bounds.width;
-    const scaleY = canvas.height / bounds.height;
-    const point = {
-      x: (event.clientX - bounds.left) * scaleX,
-      y: (event.clientY - bounds.top) * scaleY
-    };
+    const point = getCoordinates(event, canvas);
 
+    // Canvas Drawing (Coordinates are in CSS pixels, context is scaled)
     context.globalCompositeOperation = 'destination-out';
-    context.lineWidth = 48 * scaleX;
+    context.lineWidth = 40; // 40 CSS pixels wide brush
     context.lineCap = 'round';
     context.lineJoin = 'round';
     context.beginPath();
     context.moveTo(lastPointRef.current.x, lastPointRef.current.y);
     context.lineTo(point.x, point.y);
     context.stroke();
+    
     lastPointRef.current = point;
+
+    // Sparkle add karo exact finger ke niche
+    addSparkle(point.x, point.y);
 
     scratchMovesRef.current += 1;
     if (scratchMovesRef.current % 5 === 0) {
@@ -682,13 +716,8 @@ function ScratchDateCard({ copy, language, onReveal }) {
       }}
       onPointerDown={(event) => {
         if (event.button !== 0 || isRevealed) return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        const scaleX = canvasRef.current.width / bounds.width;
-        const scaleY = canvasRef.current.height / bounds.height;
-        lastPointRef.current = {
-          x: (event.clientX - bounds.left) * scaleX,
-          y: (event.clientY - bounds.top) * scaleY
-        };
+        const canvas = canvasRef.current;
+        lastPointRef.current = getCoordinates(event, canvas);
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
       onPointerMove={scratch}
@@ -714,6 +743,22 @@ function ScratchDateCard({ copy, language, onReveal }) {
           {copy.weddingPheras} · {copy.eightOnwards}
         </p>
       </div>
+
+      <div className="sparkle-container">
+        {sparkles.map((sparkle) => (
+          <span
+            key={sparkle.id}
+            className="sparkle"
+            style={{ 
+              left: sparkle.x, 
+              top: sparkle.y,
+              width: `${sparkle.size}px`,
+              height: `${sparkle.size}px`
+            }}
+          />
+        ))}
+      </div>
+
       <canvas
         ref={canvasRef}
         className="date-card__scratch-layer"

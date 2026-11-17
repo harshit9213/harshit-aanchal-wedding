@@ -834,6 +834,9 @@
   width: 100%;
   padding: 1.2rem;
   text-align: center;
+  /* Text ko peeche rakhne ke liye z-index */
+  position: relative; 
+  z-index: 1; 
 }
 
 .date-card__revealed h2 {
@@ -860,9 +863,9 @@
   width: 100%;
   height: 100%;
   touch-action: none;
-  transition:
-    opacity 850ms cubic-bezier(0.2, 0.75, 0.2, 1),
-    visibility 850ms ease;
+  /* Canvas hamesha text ke upar rahega */
+  z-index: 2; 
+  transition: opacity 850ms cubic-bezier(0.2, 0.75, 0.2, 1), visibility 850ms ease;
 }
 
 .date-card__scratch-area.is-revealed {
@@ -2381,4 +2384,52 @@
   .app-frame--hi .floating-nav button {
     font-size: 0.66rem;
   }
+}
+/* --- SPARKLES ANIMATION --- */
+/* --- SILVER SPARKLES --- */
+.sparkle-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.sparkle {
+  position: absolute;
+  background: radial-gradient(circle, #ffffff, #e0e0e0, transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%); 
+  pointer-events: none;
+  animation: silver-sparkle-pop 0.7s ease-out forwards;
+  box-shadow: 0 0 8px 2px rgba(200, 200, 255, 0.8);
+}
+
+.sparkle::before {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 10px;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #a0a0ff; /* Silver/White glow */
+  animation: silver-sparkle-rotate 0.7s linear forwards;
+}
+
+@keyframes silver-sparkle-pop {
+  0% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1.2); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translate(-50%, -80%) scale(0.1); 
+  }
+}
+
+@keyframes silver-sparkle-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(180deg); }
 }
