@@ -24,14 +24,10 @@ const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeUR
 const olaBookingUrl =
   `https://book.olacabs.com/?drop_lat=${venueLatitude}` +
   `&drop_lng=${venueLongitude}&drop_address=${encodeURIComponent(venueAddress)}`;
-const rapidoBookingUrl =
-  `https://www.rapido.bike/Home?drop_lat=${venueLatitude}` +
-  `&drop_lng=${venueLongitude}&drop_address=${encodeURIComponent(venueAddress)}`;
-
 const celebrations = [
   {
     name: 'Haldi',
-    date: 'Wednesday, 25 November',
+    date: 'Tuesday, 24 November',
     time: 'Morning',
     venue: 'RZ-153A Gali No 5, Kailash puri ext (Pankaj Book Depot)',
     dress: 'Yellow tones',
@@ -40,7 +36,7 @@ const celebrations = [
      image: haldi,
     hindi: {
       name: 'हल्दी',
-      date: 'बुधवार, 25 नवंबर',
+      date: 'मंगलवार, 24 नवंबर',
       time: 'प्रातःकाल',
       venue: 'आरजेड-153ए गली नंबर 5, कैलाश पुरी एक्सटेंशन (पंकज बुक डिपो))',
       dress: 'पीले रंग के वस्त्र'
@@ -48,7 +44,7 @@ const celebrations = [
   },
   {
     name: 'Mehendi',
-    date: 'Wednesday, 25 November',
+    date: 'Tuesday, 24 November',
     time: 'Evening',
     venue: 'RZ-153A Gali No 5, Kailash puri ext (Pankaj Book Depot)',
 
@@ -59,7 +55,7 @@ const celebrations = [
     image: mehendi,
     hindi: {
       name: 'मेहंदी',
-      date: 'बुधवार, 25 नवंबर',
+      date: 'मंगलवार, 24 नवंबर',
       time: 'सायंकाल',
       venue: 'आरजेड-153ए गली नंबर 5, कैलाश पुरी एक्सटेंशन (पंकज बुक डिपो)',
       dress: 'हरे एवं पुष्पों वाले वस्त्र'
@@ -114,8 +110,8 @@ const groomFamily = [
   }
 ];
 
-const invitedBy = ['Sh. Chatarsen Tayal', 'Sh. Hitesh Tayal', 'Yogesh','Nakul','Puneet','Gaurav'];
-const invitedByHindi = ['श्री चतरसेन तायल', 'श्री हितेश तायल', 'योगेश','नकुल','पुनीत','गौरव'];
+const invitedBy = ['Sh. Chatarsen Tayal', 'Sh. Hitesh Tayal', 'Sh. Lalit Tayal', 'Yogesh','Nakul','Puneet','Gaurav',];
+const invitedByHindi = ['श्री चतरसेन तायल', 'श्री हितेश तायल', 'श्री ललित तायल', 'योगेश','नकुल','पुनीत','गौरव'];
 const littleStars = [
   'Khyati',
   'Gracy',
@@ -184,12 +180,12 @@ const translations = {
     goodToKnow: 'Good to know',
     datesQuestion: 'What are the celebration dates and times?',
     datesAnswer:
-      'Haldi is on Wednesday morning, 25 November. Mehendi is Wednesday evening, 25 November. The Wedding Pheras are on Thursday, 26 November, at 8 PM onwards.',
+      'Haldi is on Tuesday morning, 24 November. Mehendi is Tuesday evening, 24 November. The Wedding Pheras are on Thursday, 26 November, at 8 PM onwards.',
     dressQuestion: 'What should I wear?',
     dressAnswer: 'Haldi: yellow tones. Mehendi: greens and florals. Wedding: ethnic glam.',
     travelQuestion: 'Where can I find directions and travel options?',
     travelAnswer:
-      'The venue section includes a map, Google Maps directions, and links for Uber, Ola, and Rapido.',
+      'The venue section includes a map, Google Maps directions, and links for Uber and Ola.',
     gratitude: 'With utmost gratitude and blessings',
     invitedBy: 'Cordially invited by',
     littleStars: 'Our little stars are excited to celebrate with you',
@@ -263,13 +259,13 @@ const translations = {
     goodToKnow: 'उपयोगी जानकारी',
     datesQuestion: 'उत्सव के अवसरों की तिथि और समय क्या हैं?',
     datesAnswer:
-      'हल्दी का कार्यक्रम बुधवार, 25 नवंबर की सुबह और मेहंदी का कार्यक्रम उसी दिन शाम को होगा। विवाह के फेरे गुरुवार, 26 नवंबर को रात्रि 8 बजे से होंगे।',
+      'हल्दी का कार्यक्रम मंगलवार, 24 नवंबर की सुबह और मेहंदी का कार्यक्रम उसी दिन शाम को होगा। विवाह के फेरे गुरुवार, 26 नवंबर को रात्रि 8 बजे से होंगे।',
     dressQuestion: 'किस प्रकार के वस्त्र पहनें?',
     dressAnswer:
       'हल्दी: पीले रंग के वस्त्र। मेहंदी: हरे एवं पुष्पों वाले वस्त्र। विवाह: पारंपरिक एवं उत्सवी परिधान।',
     travelQuestion: 'मार्ग और यात्रा की जानकारी कहाँ मिलेगी?',
     travelAnswer:
-      'विवाह स्थल वाले भाग में मानचित्र, गूगल मानचित्र का मार्ग और Uber, Ola तथा Rapido से गाड़ी बुक करने के विकल्प दिए गए हैं।',
+      'विवाह स्थल वाले भाग में मानचित्र, गूगल मानचित्र का मार्ग और Uber तथा Ola से गाड़ी बुक करने के विकल्प दिए गए हैं।',
     gratitude: 'सादर आभार एवं शुभकामनाओं सहित',
     invitedBy: 'सादर आमंत्रित करते हैं',
     littleStars: 'हमारे नन्हे सितारे आपके साथ उत्सव मनाने को उत्सुक हैं',
@@ -1330,15 +1326,6 @@ export default function App() {
                 >
                   <img src="/ola-logo.png" alt="" aria-hidden="true" />
                   Ola
-                </a>
-                <a
-                  className="travel-link travel-link--rapido"
-                  href={rapidoBookingUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img src="/rapido.png" alt="" aria-hidden="true" />
-                  Rapido
                 </a>
               </div>
               <div className="venue-qr">
